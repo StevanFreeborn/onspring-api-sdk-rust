@@ -85,8 +85,8 @@ use onspring::OnspringClient;
 use std::env;
 
 let client = OnspringClient::builder(env::var("API_KEY").unwrap())
-    .base_url(env::var("BASE_URL").unwrap())
-    .build();
+  .base_url(env::var("BASE_URL").unwrap())
+  .build();
 ```
 
 ### Client Configuration
@@ -99,18 +99,18 @@ use std::time::Duration;
 
 // Custom timeout
 let client = OnspringClient::builder("your-api-key")
-    .timeout(Duration::from_secs(30))
-    .build();
+  .timeout(Duration::from_secs(30))
+  .build();
 
 // Custom reqwest client
 let http_client = reqwest::Client::builder()
-    .timeout(Duration::from_secs(60))
-    .build()
-    .unwrap();
+  .timeout(Duration::from_secs(60))
+  .build()
+  .unwrap();
 
 let client = OnspringClient::builder("your-api-key")
-    .http_client(http_client)
-    .build();
+  .http_client(http_client)
+  .build();
 ```
 
 ### Error Handling
@@ -124,11 +124,11 @@ All client methods return `onspring::Result<T>`, which is an alias for `Result<T
 
 ```rust
 match client.get_app(130).await {
-    Ok(app) => println!("App: {}", app.name.unwrap_or_default()),
-    Err(onspring::OnspringError::Api { status_code, message }) => {
-        eprintln!("API error {}: {}", status_code, message);
-    }
-    Err(e) => eprintln!("Error: {}", e),
+  Ok(app) => println!("App: {}", app.name.unwrap_or_default()),
+  Err(onspring::OnspringError::Api { status_code, message }) => {
+    eprintln!("API error {}: {}", status_code, message);
+  }
+  Err(e) => eprintln!("Error: {}", e),
 }
 ```
 
@@ -160,7 +160,7 @@ let res = client.list_apps(None).await?;
 let apps = res.items.unwrap_or_default();
 
 for app in &apps {
-    println!("{:?}", app);
+  println!("{:?}", app);
 }
 ```
 
@@ -174,7 +174,7 @@ let res = client.list_apps(Some(paging)).await?;
 let apps = res.items.unwrap_or_default();
 
 for app in &apps {
-    println!("{:?}", app);
+  println!("{:?}", app);
 }
 ```
 
@@ -196,7 +196,7 @@ let res = client.batch_get_apps(&[130, 131]).await?;
 let apps = res.items.unwrap_or_default();
 
 for app in &apps {
-    println!("{:?}", app);
+  println!("{:?}", app);
 }
 ```
 
@@ -220,7 +220,7 @@ let res = client.batch_get_fields(&[4793, 4801]).await?;
 let fields = res.items.unwrap_or_default();
 
 for field in &fields {
-    println!("{:?}", field);
+  println!("{:?}", field);
 }
 ```
 
@@ -233,7 +233,7 @@ let res = client.list_fields(132, None).await?;
 let fields = res.items.unwrap_or_default();
 
 for field in &fields {
-    println!("{:?}", field);
+  println!("{:?}", field);
 }
 ```
 
@@ -247,7 +247,7 @@ let res = client.list_fields(132, Some(paging)).await?;
 let fields = res.items.unwrap_or_default();
 
 for field in &fields {
-    println!("{:?}", field);
+  println!("{:?}", field);
 }
 ```
 
@@ -275,7 +275,7 @@ println!("Content-Type: {:?}", file.content_type);
 println!("File Name: {:?}", file.file_name);
 
 if let Some(name) = &file.file_name {
-    fs::write(name, &file.data)?;
+  fs::write(name, &file.data)?;
 }
 ```
 
@@ -285,13 +285,13 @@ if let Some(name) = &file.file_name {
 use onspring::models::file::SaveFileRequest;
 
 let request = SaveFileRequest {
-    record_id: 1,
-    field_id: 4806,
-    notes: Some("notes".to_string()),
-    modified_date: None,
-    file_name: "test-attachment.txt".to_string(),
-    file_data: std::fs::read("test-attachment.txt")?,
-    content_type: "text/plain".to_string(),
+  record_id: 1,
+  field_id: 4806,
+  notes: Some("notes".to_string()),
+  modified_date: None,
+  file_name: "test-attachment.txt".to_string(),
+  file_data: std::fs::read("test-attachment.txt")?,
+  content_type: "text/plain".to_string(),
 };
 
 let res = client.upload_file(request).await?;
@@ -315,10 +315,10 @@ To add a list value don't provide an id value.
 use onspring::models::list::SaveListItemRequest;
 
 let request = SaveListItemRequest {
-    id: None,
-    name: "New Value".to_string(),
-    numeric_value: Some(1.0),
-    color: Some("#000000".to_string()),
+  id: None,
+  name: "New Value".to_string(),
+  numeric_value: Some(1.0),
+  color: Some("#000000".to_string()),
 };
 
 let res = client.save_list_item(638, request).await?;
@@ -334,10 +334,10 @@ use uuid::Uuid;
 let item_id: Uuid = "35c79a46-04b8-4069-bbc1-161a175f962c".parse().unwrap();
 
 let request = SaveListItemRequest {
-    id: Some(item_id),
-    name: "Updated Value".to_string(),
-    numeric_value: Some(1.0),
-    color: Some("#000000".to_string()),
+  id: Some(item_id),
+  name: "Updated Value".to_string(),
+  numeric_value: Some(1.0),
+  color: Some("#000000".to_string()),
 };
 
 let res = client.save_list_item(638, request).await?;
@@ -365,7 +365,7 @@ let res = client.list_records(130, None, None, None).await?;
 let records = res.items.unwrap_or_default();
 
 for record in &records {
-    println!("{:?}", record);
+  println!("{:?}", record);
 }
 ```
 
@@ -376,15 +376,15 @@ use onspring::{DataFormat, PagingRequest};
 
 let paging = PagingRequest { page_number: 1, page_size: 10 };
 let res = client.list_records(
-    130,
-    Some(paging),
-    Some(&[4804]),
-    Some(DataFormat::Raw),
+  130,
+  Some(paging),
+  Some(&[4804]),
+  Some(DataFormat::Raw),
 ).await?;
 let records = res.items.unwrap_or_default();
 
 for record in &records {
-    println!("{:?}", record);
+  println!("{:?}", record);
 }
 ```
 
@@ -414,17 +414,17 @@ Returns a collection of Onspring records based on the provided app id and record
 use onspring::models::record::BatchGetRecordsRequest;
 
 let request = BatchGetRecordsRequest {
-    app_id: 130,
-    record_ids: vec![1, 2],
-    field_ids: None,
-    data_format: None,
+  app_id: 130,
+  record_ids: vec![1, 2],
+  field_ids: None,
+  data_format: None,
 };
 
 let res = client.batch_get_records(request).await?;
 let records = res.items.unwrap_or_default();
 
 for record in &records {
-    println!("{:?}", record);
+  println!("{:?}", record);
 }
 ```
 
@@ -434,17 +434,17 @@ You can also specify what field values to return and in what format (Raw vs. For
 use onspring::{DataFormat, models::record::BatchGetRecordsRequest};
 
 let request = BatchGetRecordsRequest {
-    app_id: 130,
-    record_ids: vec![1, 2],
-    field_ids: Some(vec![4804]),
-    data_format: Some(DataFormat::Formatted),
+  app_id: 130,
+  record_ids: vec![1, 2],
+  field_ids: Some(vec![4804]),
+  data_format: Some(DataFormat::Formatted),
 };
 
 let res = client.batch_get_records(request).await?;
 let records = res.items.unwrap_or_default();
 
 for record in &records {
-    println!("{:?}", record);
+  println!("{:?}", record);
 }
 ```
 
@@ -456,17 +456,17 @@ Returns a paged collection of records based on a criteria that can be paged thro
 use onspring::models::record::QueryRecordsRequest;
 
 let request = QueryRecordsRequest {
-    app_id: 130,
-    filter: "not (4745 eq 0)".to_string(),
-    field_ids: None,
-    data_format: None,
+  app_id: 130,
+  filter: "not (4745 eq 0)".to_string(),
+  field_ids: None,
+  data_format: None,
 };
 
 let res = client.query_records(request, None).await?;
 let records = res.items.unwrap_or_default();
 
 for record in &records {
-    println!("{:?}", record);
+  println!("{:?}", record);
 }
 ```
 
@@ -476,10 +476,10 @@ You can set your own page size and page number (max is 1,000) as well. In additi
 use onspring::{DataFormat, PagingRequest, models::record::QueryRecordsRequest};
 
 let request = QueryRecordsRequest {
-    app_id: 130,
-    filter: "not (4745 eq 0)".to_string(),
-    field_ids: Some(vec![4804]),
-    data_format: Some(DataFormat::Formatted),
+  app_id: 130,
+  filter: "not (4745 eq 0)".to_string(),
+  field_ids: Some(vec![4804]),
+  data_format: Some(DataFormat::Formatted),
 };
 
 let paging = PagingRequest { page_number: 1, page_size: 10 };
@@ -487,7 +487,7 @@ let res = client.query_records(request, Some(paging)).await?;
 let records = res.items.unwrap_or_default();
 
 for record in &records {
-    println!("{:?}", record);
+  println!("{:?}", record);
 }
 ```
 
@@ -505,9 +505,9 @@ let mut fields = HashMap::new();
 fields.insert("4804".to_string(), serde_json::json!("Test"));
 
 let request = SaveRecordRequest {
-    app_id: 130,
-    record_id: None,
-    fields,
+  app_id: 130,
+  record_id: None,
+  fields,
 };
 
 let res = client.save_record(request).await?;
@@ -524,9 +524,9 @@ let mut fields = HashMap::new();
 fields.insert("4804".to_string(), serde_json::json!("Updated"));
 
 let request = SaveRecordRequest {
-    app_id: 130,
-    record_id: Some(607),
-    fields,
+  app_id: 130,
+  record_id: Some(607),
+  fields,
 };
 
 let res = client.save_record(request).await?;
@@ -550,8 +550,8 @@ Delete a batch of records based upon their ids.
 use onspring::models::record::BatchDeleteRecordsRequest;
 
 let request = BatchDeleteRecordsRequest {
-    app_id: 130,
-    record_ids: vec![608, 609],
+  app_id: 130,
+  record_ids: vec![608, 609],
 };
 
 client.batch_delete_records(request).await?;
@@ -575,9 +575,9 @@ You can also specify the format of the data in the report as well as whether you
 use onspring::{DataFormat, ReportDataType};
 
 let report = client.get_report(
-    409,
-    Some(DataFormat::Formatted),
-    Some(ReportDataType::ChartData),
+  409,
+  Some(DataFormat::Formatted),
+  Some(ReportDataType::ChartData),
 ).await?;
 println!("{:?}", report);
 ```
@@ -591,7 +591,7 @@ let res = client.list_reports(130, None).await?;
 let reports = res.items.unwrap_or_default();
 
 for report in &reports {
-    println!("{:?}", report);
+  println!("{:?}", report);
 }
 ```
 
@@ -605,6 +605,6 @@ let res = client.list_reports(130, Some(paging)).await?;
 let reports = res.items.unwrap_or_default();
 
 for report in &reports {
-    println!("{:?}", report);
+  println!("{:?}", report);
 }
 ```

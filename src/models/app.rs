@@ -4,7 +4,7 @@ use serde::Deserialize;
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct App {
-    pub href: Option<String>,
-    pub id: i32,
-    pub name: Option<String>,
+  pub href: Option<String>,
+  pub id: i32,
+  pub name: Option<String>,
 }
