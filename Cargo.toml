@@ -1,8 +1,8 @@
 [package]
 name = "onspring"
-version = "0.1.0"
+version = "0.0.0"
 edition = "2021"
-description = "Rust SDK for the Onspring API v2"
+description = "Rust SDK for the Onspring API"
 license = "MIT"
 
 [dependencies]
