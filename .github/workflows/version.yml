@@ -1,0 +1,99 @@
+name: Version
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  version:
+    name: Bump version and tag
+    runs-on: ubuntu-latest
+    # Skip if the push was a version bump commit (prevent infinite loop)
+    if: "!startsWith(github.event.head_commit.message, 'chore(release):')"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get latest tag
+        id: latest_tag
+        run: |
+          tag=$(git tag -l 'v*' --sort=-v:refname | head -n1)
+          if [ -z "$tag" ]; then
+            tag="v0.0.0"
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Latest tag: $tag"
+
+      - name: Determine version bump from commits
+        id: bump
+        run: |
+          latest_tag="${{ steps.latest_tag.outputs.tag }}"
+          current="${latest_tag#v}"
+          IFS='.' read -r major minor patch <<< "$current"
+
+          # Get commit messages since last tag
+          if git rev-parse "$latest_tag" >/dev/null 2>&1; then
+            commits=$(git log "$latest_tag"..HEAD --pretty=format:"%s")
+          else
+            commits=$(git log --pretty=format:"%s")
+          fi
+
+          if [ -z "$commits" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          bump="none"
+          while IFS= read -r msg; do
+            if echo "$msg" | grep -qiE '^feat(\(.+\))?!:|^[a-z]+(\(.+\))?!:|BREAKING CHANGE'; then
+              bump="major"
+              break
+            elif echo "$msg" | grep -qiE '^feat(\(.+\))?:'; then
+              if [ "$bump" != "major" ]; then
+                bump="minor"
+              fi
+            elif echo "$msg" | grep -qiE '^fix(\(.+\))?:'; then
+              if [ "$bump" = "none" ]; then
+                bump="patch"
+              fi
+            fi
+          done <<< "$commits"
+
+          if [ "$bump" = "none" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          case "$bump" in
+            major) major=$((major + 1)); minor=0; patch=0 ;;
+            minor) minor=$((minor + 1)); patch=0 ;;
+            patch) patch=$((patch + 1)) ;;
+          esac
+
+          new_version="${major}.${minor}.${patch}"
+          echo "version=$new_version" >> "$GITHUB_OUTPUT"
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+          echo "Bump: $bump -> v$new_version"
+
+      - name: Update Cargo.toml version
+        if: steps.bump.outputs.skip != 'true'
+        run: |
+          new_version="${{ steps.bump.outputs.version }}"
+          sed -i "s/^version = \".*\"/version = \"$new_version\"/" Cargo.toml
+          echo "Updated Cargo.toml to version $new_version"
+
+      - name: Commit and tag
+        if: steps.bump.outputs.skip != 'true'
+        run: |
+          new_version="${{ steps.bump.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Cargo.toml
+          git commit -m "chore(release): v${new_version}"
+          git tag "v${new_version}"
+          git push origin main --tags
