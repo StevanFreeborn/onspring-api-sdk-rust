@@ -136,7 +136,39 @@ match client.get_app(130).await {
 
 You may wish to refer to the full [Onspring API documentation](https://software.onspring.com/hubfs/Training/Admin%20Guide%20-%20v2%20API.pdf) when determining which values to pass as parameters to some of the `OnspringClient` methods. There is also a [swagger page](https://api.onspring.com/swagger/index.html) that you can use for making exploratory requests.
 
-## Examples
+## Runnable Examples
+
+The `examples/` directory contains runnable examples that demonstrate each endpoint group against a real Onspring instance. They load configuration from a `.env` file in the project root.
+
+Create a `.env` file with your test instance details:
+
+```env
+API_BASE_URL=https://your-instance.onspring.com
+SANDBOX_API_KEY=your-api-key
+TEST_APP_ID=123
+TEST_SURVEY_ID=456
+TEST_TEXT_FIELD=789
+TEST_RECORD=1
+TEST_ATTACHMENT_FIELD=101
+TEST_ATTACHMENT=202
+TEST_IMAGE_FIELD=303
+TEST_IMAGE=404
+TEST_LIST_ID=505
+```
+
+Then run any example:
+
+```sh
+cargo run --example ping
+cargo run --example apps
+cargo run --example fields
+cargo run --example records
+cargo run --example files
+cargo run --example lists
+cargo run --example reports
+```
+
+## Code Examples
 
 Note the following code snippets assume you've already instantiated an `OnspringClient` as shown in the [OnspringClient](#onspringclient) section and that the code is running within an async context.
 
