@@ -1,8 +1,8 @@
 # Onspring API Rust SDK
 
 [![CI](https://github.com/StevanFreeborn/onspring-api-sdk-rust/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/StevanFreeborn/onspring-api-sdk-rust/actions/workflows/ci.yml)
-[![crates.io](https://img.shields.io/crates/v/onspring.svg)](https://crates.io/crates/onspring)
-[![docs.rs](https://docs.rs/onspring/badge.svg)](https://docs.rs/onspring)
+[![crates.io](https://img.shields.io/crates/v/onspring-api-sdk-rust.svg)](https://crates.io/crates/onspring-api-sdk-rust)
+[![docs.rs](https://docs.rs/onspring-api-sdk-rust/badge.svg)](https://docs.rs/onspring-api-sdk-rust)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
 
 The Rust SDK for the Onspring API is meant to simplify development in Rust for Onspring customers who want to build integrations with their Onspring instance.

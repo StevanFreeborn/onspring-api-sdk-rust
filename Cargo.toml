@@ -4,6 +4,9 @@ version = "0.0.0"
 edition = "2021"
 description = "Rust SDK for the Onspring API"
 license = "MIT"
+repository = "https://github.com/StevanFreeborn/onspring-api-sdk-rust"
+homepage = "https://github.com/StevanFreeborn/onspring-api-sdk-rust"
+documentation = "https://docs.rs/onspring-api-sdk-rust"
 
 [lib]
 name = "onspring"
