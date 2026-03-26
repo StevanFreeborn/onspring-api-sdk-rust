@@ -1,5 +1,6 @@
 name: Version
 on:
+  workflow_dispatch: 
   push:
     branches: [main]
 permissions:
@@ -19,22 +20,29 @@ jobs:
         run: |
           tag=$(git tag -l 'v*' --sort=-v:refname | head -n1)
           if [ -z "$tag" ]; then
-            tag="v0.0.0"
+            echo "tag=" >> "$GITHUB_OUTPUT"
+            echo "No existing tags found"
+          else
+            echo "tag=$tag" >> "$GITHUB_OUTPUT"
+            echo "Latest tag: $tag"
           fi
-          echo "tag=$tag" >> "$GITHUB_OUTPUT"
-          echo "Latest tag: $tag"
       - name: Determine version bump from commits
         id: bump
         run: |
           latest_tag="${{ steps.latest_tag.outputs.tag }}"
+
+          # First release: publish 0.0.0 without bumping
+          if [ -z "$latest_tag" ]; then
+            echo "version=0.0.0" >> "$GITHUB_OUTPUT"
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            echo "First release: v0.0.0"
+            exit 0
+          fi
+
           current="${latest_tag#v}"
           IFS='.' read -r major minor patch <<< "$current"
 
-          if git rev-parse "$latest_tag" >/dev/null 2>&1; then
-            commits=$(git log "$latest_tag"..HEAD --pretty=format:"%s")
-          else
-            commits=$(git log --pretty=format:"%s")
-          fi
+          commits=$(git log "$latest_tag"..HEAD --pretty=format:"%s")
 
           if [ -z "$commits" ]; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
