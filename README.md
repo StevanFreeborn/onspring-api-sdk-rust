@@ -33,14 +33,14 @@ Requires Rust edition 2021 or later (Rust 1.56+).
 Add the SDK to your project using Cargo:
 
 ```sh
-cargo add onspring
+cargo add onspring-api-sdk-rust
 ```
 
 Or add it directly to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-onspring = "0.1"
+onspring-api-sdk-rust = "<latest>"
 tokio = { version = "1", features = ["full"] }
 ```
 
