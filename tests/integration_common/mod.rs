@@ -1,7 +1,17 @@
 use onspring::OnspringClient;
 use std::collections::HashMap;
+use std::sync::Once;
+
+static INIT: Once = Once::new();
+
+pub fn load_env() {
+  INIT.call_once(|| {
+    dotenvy::dotenv().ok();
+  });
+}
 
 pub fn required_env(name: &str) -> String {
+  load_env();
   std::env::var(name).unwrap_or_else(|_| panic!("{} is not defined", name))
 }
 

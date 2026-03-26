@@ -2,6 +2,7 @@ use onspring::{OnspringClient, SaveFileRequest};
 
 #[tokio::main]
 async fn main() -> onspring::Result<()> {
+  dotenvy::dotenv().ok();
   let base_url = std::env::var("API_BASE_URL").expect("API_BASE_URL is required");
   let api_key = std::env::var("SANDBOX_API_KEY").expect("SANDBOX_API_KEY is required");
   let record_id: i32 = std::env::var("TEST_RECORD")
