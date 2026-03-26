@@ -1,6 +1,6 @@
 [package]
 name = "onspring-api-sdk-rust"
-version = "0.0.0"
+version = "0.0.1"
 edition = "2021"
 description = "Rust SDK for the Onspring API"
 license = "MIT"
